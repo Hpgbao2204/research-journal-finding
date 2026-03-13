@@ -1,28 +1,44 @@
-# Research Journal ETL (WoS + SJR)
+# Research Journal Finder & ETL
 
-Pipeline ETL local dùng **Python + Pandas + SQLite** để hợp nhất dữ liệu journal từ:
-- `data/scimagojr 2024.csv`
-- `data/wos_master_journal_list.csv`
+A full-stack web application designed to process, search, and filter academic journals based on SCImago Journal Rank (SJR) and Web of Science (WoS) metrics.
 
-## Output
-- SQLite DB: `output/journals.db`
-- Table: `Journal`
-- Log file: `logs/etl_pipeline.log`
+## 🚀 Features
+- **ETL Pipeline:** Combine and clean massive `.csv` datasets (SJR & WoS) into a local SQLite database (`output/journals.db`).
+- **REST API:** High-performance FastAPI back-end with Swagger UI and filtering logic.
+- **Modern UI:** Clean React/Vite/Tailwind front-end featuring dynamic filtering by **Subject**, **Rank**, **Publishers**, and direct links to search for the official websites.
 
-## Chạy nhanh
+## 🛠️ Tech Stack
+- **Backend:** Python 3, Pandas, FastAPI, SQLAlchemy, SQLite
+- **Frontend:** React (Vite), Tailwind CSS, Axios, Lucide React
+
+---
+
+## 💻 Setup Instructions
+
+### 1. Build DB & Start Backend
+Open terminal at the root directory:
+
 ```bash
-python3 -m pip install -r requirements.txt
-python3 etl_pipeline.py
+# Install Python dependencies
+pip install -r requirements.txt
+
+# 1. Run the ETL Pipeline (Generates output/journals.db using files in data/)
+python src/pipeline/etl_pipeline.py
+
+# 2. Start the Backend API Server (Runs on http://localhost:8000)
+uvicorn src.api.main:app --reload
 ```
 
-## Trường dữ liệu trong bảng `Journal`
-- `Title`
-- `ISSN`
-- `SJR_Rank`
-- `Subject_Area_Category`
-- `Publisher`
+### 2. Start Frontend
+Open a **new terminal window** at the root directory:
 
-## Ghi chú quan trọng
-- Pipeline ưu tiên merge theo `ISSN`.
-- Nếu file WoS không có cột ISSN, pipeline sẽ tự fallback merge theo `Title` (đã normalize), đồng thời ghi cảnh báo vào log.
-- Dữ liệu thiếu (`missing`) được xử lý bằng default value để tránh lỗi khi load DB.
+```bash
+cd frontend
+npm install
+npm run dev
+# Vite will start on http://localhost:5173
+```
+
+## 🌐 API Documentation
+With the backend running, view the interactive API Documentation at:
+👉 `http://127.0.0.1:8000/docs`
